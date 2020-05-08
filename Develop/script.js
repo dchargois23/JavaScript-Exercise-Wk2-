@@ -1,58 +1,69 @@
-/Universal Variables go here
-//var computerOutput= #
-//var userInput = #
-//Prompt
-var charSet = "qwertyuiopasdfghjklzxvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-var numSet = "1234567890";
-var charSpecial = "!#$%&'()*+,-./:;<=>?@[]^_`{|}~";
+// Welcome user and prompt user to generate a password
+window.onload = alert("Welcome! Please click 'Generate password' to start!");
+
 // Assignment Code
-var userInput = prompt(
-    "Please select a password length? (Between 8-128 characters)"
-);
-if (userInput < 8 || userInput > 128) {
-    alert("Please select a valid character");
-} else {
-    var upperCase = confirm("Do you want to include upper case letters?");
-    if (upperCase === false) {
-        charSet = charSet.toLowerCase();
-        var userGuessUpper = charSet[Math.floor(Math.random() * charSet.length)];
-    } else {
-        var userGuessLower = charSet[Math.floor(Math.random() * charSet.length)];
+var generateBtn = document.querySelector("#generate");
+
+// Add event listener to generate button
+generateBtn.addEventListener("click", generatePassword);
+
+function generatePassword() {
+
+    // User input variables (strings): 
+    var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var lowerCase = "abcdefghijklmnopqrstuvwxyz";
+    var numeric = "0123456789";
+    var specialChar = "!$^*&#-=~+_?@$%^{}()";
+
+    // Start user prompts and validation of user input. 
+
+    var passwordLength = parseInt(prompt("How many characters would you like in your password? Choose between 8 and 128"));
+
+    if (!passwordLength) {
+        alert("This password needs a value. Please try again!");
+        return;
     }
-    var specialCharacters = confirm("Do want to include special characters?");
-    if (specialCharacters === true) {
-        var userSpSel = charSpecial[Math.floor(Math.random() * charSpecial.length)];
+
+    else if (passwordLength < 8 || passwordLength > 128) {
+        alert("Password length must be between 8 and 128 characters. Please try again!");
+        return;
     }
-    var numbers = confirm("Do you want to inlucde numbers?");
-    if (numbers === true) {
-        var userNum = numSet[Math.floor(Math.random() * numSet.length)];
+
+    var confirmUpperCaseChar = confirm("Do you want this password to contain uppercases?");
+    var confirmLowerCaseChar = confirm("Do you want this password to contain lowercases?");
+    var confirmNumericChar = confirm("Do you want this password to contain numbers?");
+    var confirmSpecialChar = confirm("Do you want this password to contain special characters?");
+
+    // Push and store user input into the array
+
+    var characterType = [];
+    if (confirmUpperCaseChar) {
+        characterType.push(upperCase);
     }
-    //console.log(passwordLength);
-    function characterGen() {
-        //turns user input into an interger
-        var passwordLength = parseInt(userInput);
-        //an array of all the possible lists
-        var randomInstance = [userGuessLower || userGuessUpper, userSpSel, userNum];
-        //creates a single instance of the actual array's
-        var randomCharacter =
-            randomInstance[Math.floor(Math.random() * randomInstance.length)];
-        //trying to build an array with the user data
-        builtArray = [];
-        for (i = 0; i < passwordLength; i++) {
-            builtArray.push(randomCharacter);
-        }
-        console.log(builtArray);
-        return builtArray;
-        //console.log(randomCharacter);
+
+    if (confirmLowerCaseChar) {
+        characterType.push(lowerCase);
     }
-    //given text...
-    var generateBtn = document.querySelector("#generate");
-    // Write password to the #password input
-    function writePassword() {
-        var password = characterGen();
-        var passwordText = document.querySelector("#password");
-        passwordText.value = password;
+
+    if (confirmNumericChar) {
+        characterType.push(numeric);
     }
-    // Add event listener to generate button
-    generateBtn.addEventListener("click", writePassword);
-}
+
+    if (confirmSpecialChar) {
+        characterType.push(specialChar);
+    }
+
+    // Join the new array that contains the stored user input
+    var characterTypeJoined = characterType.join('');
+
+    // Computer randomly generates a password from the new joined array, based on stored user inputs
+    var passwordFinal = "";
+    for (var i = 0, n = characterTypeJoined.length; i < passwordLength; i++) {
+
+        passwordFinal += characterTypeJoined.charAt(Math.floor(Math.random() * n));
+    }
+
+    // Generated secure password is displayed on page
+    var passwordText = document.querySelector("#password");
+    passwordText.value = passwordFinal;
+} 
